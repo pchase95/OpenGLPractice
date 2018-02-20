@@ -27,7 +27,11 @@ int main()
 	Shape tri(points, GL_TRIANGLES, rainbow);
 	tri.addVBO(colors);
 
-	const maths::Mat4 out = maths::Mat4::Identity();
+	maths::Mat4 scale = maths::Mat4::Scale(maths::Vec3(1.5f, 1.5, 1.0));
+
+	maths::Mat4 rot = maths::Mat4::Rotate(90.0f, maths::Vec3(0.5f, 0.0f, 1.0));
+
+	maths::Mat4 out = maths::Mat4::Identity() * scale * rot;
 
 	rainbow.setUniformMatrix4fv("u_matrix", out.Get());
 

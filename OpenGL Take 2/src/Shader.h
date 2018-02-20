@@ -22,7 +22,7 @@ public:
 	~Shader() {}
 	void setUniorm3f(const char* uniform, maths::Vec3 vec);
 	void setUniform4f(const char* uniform, maths::Vec4 vec);
-	void setUniformMatrix4fv(const char* uniform, const float* mat4);
+	void setUniformMatrix4fv(const char* uniform, const maths::Mat4& mat4);
 	void bindAttrib(unsigned int position, const char* name);
 	inline unsigned int Get() const { return shader_program; }
 	bool isValid() const;

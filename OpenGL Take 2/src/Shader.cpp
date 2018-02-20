@@ -151,11 +151,11 @@ void Shader::setUniform4f(const char* uniform, maths::Vec4 vec)
 	glUniform4f(location, vec.x, vec.y, vec.z, vec.w);
 }
 
-void Shader::setUniformMatrix4fv(const char* uniform, const float* mat4)
+void Shader::setUniformMatrix4fv(const char* uniform, const maths::Mat4& mat4)
 {
 	int location = getUniformLocation(uniform);
 	glUseProgram(shader_program);
-	glUniformMatrix4fv(location, 1, false, mat4);
+	glUniformMatrix4fv(location, 1, false, mat4.Get());
 }
 
 bool Shader::isValid() const

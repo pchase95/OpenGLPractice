@@ -33,7 +33,7 @@ int main()
 
 	maths::Mat4 out = maths::Mat4::Identity() * scale * rot;
 
-	rainbow.setUniformMatrix4fv("u_matrix", out.Get());
+	rainbow.setUniformMatrix4fv("u_matrix", out);
 
 	while (Window::Instance()->IsOpen())
 	{

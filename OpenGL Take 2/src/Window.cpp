@@ -92,7 +92,7 @@ void Window::updateFPSCounter()
 	static double previous_seconds = glfwGetTime();
 	static int frame_count = 0;
 	double current_seconds = glfwGetTime();
-	double elapsed_seconds = current_seconds - previous_seconds;
+	elapsed_seconds = ((float) current_seconds) - ((float)previous_seconds);
 	if (elapsed_seconds > 0.25)
 	{
 		previous_seconds = current_seconds;
@@ -119,6 +119,12 @@ void Window::poll()
 	{
 		terminate();
 	}
+}
+
+void Window::clear()
+{
+	glViewport(0, 0, width, height);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void Window::terminate()

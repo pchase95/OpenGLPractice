@@ -1,5 +1,5 @@
 #include "Shader.h"
-#include "Maths.h"
+#include "maths/Maths.h"
 #include "Log.h"
 #include <iostream>
 #include <cstring>
@@ -120,32 +120,43 @@ void Shader::bindAttrib(unsigned int position, const char* name)
 	glBindAttribLocation(shader_program, position, name);
 }
 
-int Shader::setUniform(const char* uniform)
+int Shader::getUniformLocation(const char* uniform)
 {
+	if (uniform_locations.count(uniform) > 0)
+	{
+		return uniform_locations[uniform];
+	}
+
 	int location = glGetUniformLocation(shader_program, uniform);
-	
 	if (location == -1)
 	{
 		Log::logError("ERROR: Could not find shader uniform");
 		__debugbreak();
 	}
-	glUseProgram(shader_program);
+	uniform_locations[uniform] = location;
 	return location;
 }
 
-void Shader::setUniorm3f(const char* uniform, Maths::Vec3 vec)
+void Shader::setUniorm3f(const char* uniform, maths::Vec3 vec)
 {
-	int location = setUniform(uniform);
+	int location = getUniformLocation(uniform);
+	glUseProgram(shader_program);
 	glUniform3f(location, vec.x, vec.y, vec.z);
 }
 
-void Shader::setUniform4f(const char* uniform, Maths::Vec4 vec)
+void Shader::setUniform4f(const char* uniform, maths::Vec4 vec)
 {
-	int location = setUniform(uniform);
-	glUniform4f(location, vec.x, vec.y, vec.z, vec.a);
+	int location = getUniformLocation(uniform);
+	glUseProgram(shader_program);
+	glUniform4f(location, vec.x, vec.y, vec.z, vec.w);
 }
 
-
+void Shader::setUniformMatrix4fv(const char* uniform, const float* mat4)
+{
+	int location = getUniformLocation(uniform);
+	glUseProgram(shader_program);
+	glUniformMatrix4fv(location, 1, false, mat4);
+}
 
 bool Shader::isValid() const
 {

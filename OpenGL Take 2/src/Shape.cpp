@@ -4,24 +4,24 @@
 #include <cstring>
 #include <iostream>
 
-Shape::Shape(float* points, size_t points_length, unsigned int method)
-	: point_count((int)points_length / 3),
+Shape::Shape(std::array<float, 9> points, unsigned int method)
+	: point_count(3),
 	  vao(0),
 	  draw_method(method),
 	  attrib_count(0),
 	  shader(nullptr)
 {
-	createVertexObjects(points, points_length);
+	createVertexObjects(points);
 }
 
-Shape::Shape(float* points, size_t points_length, unsigned int method, Shader t_shader)
-	: point_count((int)points_length / 3),
+Shape::Shape(std::array<float, 9> points, unsigned int method, Shader t_shader)
+	: point_count(3),
 	  vao(0),
 	  draw_method(method),
 	  attrib_count(0),
 	  shader(new Shader(t_shader))
 {
-	createVertexObjects(points, points_length);
+	createVertexObjects(points);
 }
 
 Shape::~Shape()
@@ -31,29 +31,21 @@ Shape::~Shape()
 
 void Shape::draw() const
 {
-	if (shader != nullptr)
-	{
-		glUseProgram(shader->Get());
-	}
-	else
-	{
-		glUseProgram(0);
-	}
-
+	glUseProgram(shader->Get());
 	glBindVertexArray(vao);
 	glDrawArrays(draw_method, 0, point_count);
 }
 
-void Shape::createVertexObjects(float* t_points, size_t t_points_length)
+void Shape::createVertexObjects(std::array<float, 9> points)
 {
-	const size_t size = sizeof(float) * t_points_length;
+	const size_t size = sizeof(float) * 9;
 	// Now copy chunk of memory onto Vertex Buffer Object (vbo)
 	// var will be a reference to the buffer
 	unsigned int vbo = 0;
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo); // current buffer is our vbo variable
 										// copying chunk of memory stored in points to vbo buffer
-	glBufferData(GL_ARRAY_BUFFER, size, t_points, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, size, points.data(), GL_STATIC_DRAW);
 
 	/* Now we set up Vertex Array Object, which memorizes layout of buffer
 	Basically, it tells that graphis card that our points array contains positional
@@ -67,12 +59,12 @@ void Shape::createVertexObjects(float* t_points, size_t t_points_length)
 	glEnableVertexAttribArray(attrib_count++);
 }
 
-void Shape::addVBO(float* points, size_t points_length)
+void Shape::addVBO(std::array<float, 9> points)
 {
 	unsigned int vbo = 0;
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, points_length * sizeof(float), points, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, 9 * sizeof(float), points.data(), GL_STATIC_DRAW);
 	glVertexAttribPointer(1, 3, GL_FLOAT, false, 0, 0);
 	glBindVertexArray(vao);
 	glEnableVertexAttribArray(attrib_count++);

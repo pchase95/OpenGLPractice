@@ -2,6 +2,7 @@
 
 #include "Shader.h"
 #include <GL/glew.h>
+#include <array>
 
 class Shape
 {
@@ -14,15 +15,15 @@ private:
 
 	Shape(const Shape& s) = delete;
 	Shape() = delete;
-	void createVertexObjects(float* points, size_t points_length);
+	void createVertexObjects(std::array<float, 9> points);
 public:
-	Shape(float* t_points, size_t t_point_count, unsigned int method);
-	Shape(float* t_points, size_t t_point_count, unsigned int method, Shader t_shader);
+	Shape(std::array<float, 9> points, unsigned int method);
+	Shape(std::array<float, 9> points, unsigned int method, Shader t_shader);
 	~Shape();
 
 	void draw() const;
 	void setShader(const Shader& t_shader);
-	void addVBO(float* points, size_t points_length);
+	void addVBO(std::array<float, 9> points);
 
 	inline Shader* getShader() const { return shader; }
 	inline unsigned int DrawMethod() const { return draw_method; }

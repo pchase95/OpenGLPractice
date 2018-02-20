@@ -1,38 +1,41 @@
 #include "Shape.h"
 #include "Window.h"
 #include "Shader.h"
-#include "Maths.h"
+#include "maths/Maths.h"
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <iostream>
+#include <array>
 
 int main()
 {
 	Window::Instance()->init();
 	Shader rainbow("res/rainbow.shader");
 
-	float points[9] {
+	std::array<float, 9> points {
 		-0.5f, -0.5f, 0.0f,
 		 0.0f,  0.5f, 0.0f,
-		 0.5,  -0.5,  0.0f
+		 0.5f, -0.5f, 0.0f
 	};
 
-	float colors[9] {
+	std::array<float, 9> colors {
 		1.0f, 0.0f, 0.0f,
 		0.0f, 1.0f, 0.0f,
 		0.0f, 0.0f, 1.0f
 	};
 
-	Shape tri(points, 9, GL_TRIANGLES, rainbow);
-	tri.addVBO(colors, 9);
+	Shape tri(points, GL_TRIANGLES, rainbow);
+	tri.addVBO(colors);
+
+	const maths::Mat4 out = maths::Mat4::Identity();
+
+	rainbow.setUniformMatrix4fv("u_matrix", out.Get());
 
 	while (Window::Instance()->IsOpen())
 	{
-		glViewport(0, 0, Window::Instance()->Width(), Window::Instance()->Height());
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		Window::Instance()->clear();
 
-		/* Draw stuff here */
 		tri.draw();
-		/* *************** */
 
 		Window::Instance()->poll();
 	}
